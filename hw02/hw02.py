@@ -64,9 +64,14 @@ def accumulate(combiner, base, n, f):
     16
     """
     "*** YOUR CODE HERE ***"
-    k = 1
-    total = 1
-    k += 1
+    if n == 0:
+        k = 1
+        total = 0
+        k += 1
+    else:
+        k = 1
+        total = 1
+        k += 1
     while k <= n:
         total = combiner(total,f(k))
         k += 1
@@ -134,67 +139,13 @@ def make_repeater(h, n):
     5
     """
     "*** YOUR CODE HERE ***"
+    if n == 0:
+        return identity
+    else:
+        k, func = 1, h
+        k += 1
+        while k <= n:
+            func = compose1(h, func)
+            k += 1
+        return func
 
-
-##########################
-# Just for fun Questions #
-##########################
-
-def zero(f):
-    return lambda x: x
-
-def successor(n):
-    return lambda f: lambda x: f(n(f)(x))
-
-def one(f):
-    """Church numeral 1: same as successor(zero)"""
-    "*** YOUR CODE HERE ***"
-
-def two(f):
-    """Church numeral 2: same as successor(successor(zero))"""
-    "*** YOUR CODE HERE ***"
-
-three = successor(two)
-
-def church_to_int(n):
-    """Convert the Church numeral n to a Python integer.
-
-    >>> church_to_int(zero)
-    0
-    >>> church_to_int(one)
-    1
-    >>> church_to_int(two)
-    2
-    >>> church_to_int(three)
-    3
-    """
-    "*** YOUR CODE HERE ***"
-
-def add_church(m, n):
-    """Return the Church numeral for m + n, for Church numerals m and n.
-
-    >>> church_to_int(add_church(two, three))
-    5
-    """
-    "*** YOUR CODE HERE ***"
-
-def mul_church(m, n):
-    """Return the Church numeral for m * n, for Church numerals m and n.
-
-    >>> four = successor(three)
-    >>> church_to_int(mul_church(two, three))
-    6
-    >>> church_to_int(mul_church(three, four))
-    12
-    """
-    "*** YOUR CODE HERE ***"
-
-def pow_church(m, n):
-    """Return the Church numeral m ** n, for Church numerals m and n.
-
-    >>> church_to_int(pow_church(two, three))
-    8
-    >>> church_to_int(pow_church(three, two))
-    9
-    """
-    "*** YOUR CODE HERE ***"
