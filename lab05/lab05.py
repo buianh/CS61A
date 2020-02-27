@@ -215,12 +215,7 @@ def sprout_leaves(t, values):
     if is_leaf(t):
         return tree(label(t),branches=new_branch)
     else:
-        branch = branches(t)
-        for b in branches(t):
-            if is_leaf(b):
-                i=branches(t).index(b)
-                branch[i]= tree(label(branch[i]),branches=new_branch)
-        return tree(label(t),branches=branch)
+        return tree(label(t),[sprout_leaves(b, values) for b in branches(t)])
 
 
 # Tree ADT
