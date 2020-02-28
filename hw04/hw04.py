@@ -206,6 +206,22 @@ def make_withdraw(balance, password):
     True
     """
     "*** YOUR CODE HERE ***"
+    pass_lst = []
+    def withdraw(amount, pass_input):
+        nonlocal balance
+        nonlocal password
+        nonlocal pass_lst
+        while len(pass_lst) < 3:
+            if pass_input == password:
+                if amount > balance:
+                    return 'Insufficient funds'
+                balance = balance - amount
+                return balance
+            else:
+                pass_lst.append(pass_input)
+                return 'Incorrect password'
+        return 'Your account is locked. Attempts: ' + str(pass_lst)
+    return withdraw
 
 def make_joint(withdraw, old_pass, new_pass):
     """Return a password-protected withdraw function that has joint access to
@@ -246,7 +262,14 @@ def make_joint(withdraw, old_pass, new_pass):
     "Your account is locked. Attempts: ['my', 'secret', 'password']"
     """
     "*** YOUR CODE HERE ***"
-
+    baseline = withdraw(0,old_pass)
+    if type(baseline) == str:
+        return baseline
+    def joint(amount,new_pass):
+        if new_pass == old_pass:
+            return withdraw(amount,old_pass)
+        return withdraw(amount,new_pass)
+    return joint
 
 
 ## Tree Methods ##
