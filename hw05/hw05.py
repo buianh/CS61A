@@ -85,13 +85,14 @@ def preorder(t):
     """
     "*** YOUR CODE HERE ***"
     lst = []
-    if is_leaf(t):
-        return [root(t)]
-    else:
-        lst += root(t)
-        for b in branches(t):
-            lst += preorder(b)
-        return (lst)
+    if t.is_leaf():
+        return [t.label]
+    elif all([b.is_leaf() for b in t.branches]):
+        return [t.label] + [b.label for b in t.branches]
+    my_lst = [t.label]
+    for i in range(len(t.branches)):
+        my_lst += preorder(t.branches[i])
+    return my_lst
 
 
 def store_digits(n):
@@ -106,6 +107,12 @@ def store_digits(n):
     Link(8, Link(7, Link(6)))
     """
     "*** YOUR CODE HERE ***"
+    if n < 10:
+        return Link(n)
+    my_lst = [int(x) for x in str(n)]
+    rest = [str(x) for x in my_lst[1:]]
+    rest = int("".join(rest))
+    return Link(my_lst[0],store_digits(rest))
 
 def generate_paths(t, value):
     """Yields all possible paths from the root of t to a node with the label value
@@ -143,11 +150,11 @@ def generate_paths(t, value):
     """
 
     "*** YOUR CODE HERE ***"
-
-    for _______________ in _________________:
-        for _______________ in _________________:
-
-            "*** YOUR CODE HERE ***"
+    if t.label == value:
+        yield [t.label]
+    for b in t.branches:
+        for path in generate_paths(b, value):
+            yield [t.label]+path
 
 ## Optional Questions
 def is_bst(t):
