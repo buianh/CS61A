@@ -175,28 +175,57 @@ def sphinx_swap(start, goal, limit):
         
     # END PROBLEM 6
 
-
+#This solution does not pass all tests
 def feline_fixes(start, goal, limit):
     """A diff function that computes the edit distance from START to GOAL."""
-    assert False, 'Remove this line'
-
-    if ______________: # Fill in the condition
-        # BEGIN
-        "*** YOUR CODE HERE ***"
-        # END
-
-    elif ___________: # Feel free to remove or add additional cases
-        # BEGIN
-        "*** YOUR CODE HERE ***"
-        # END
-
+    lst1 = list(start)
+    lst2 = list(goal)
+    def add(w1,w2):
+        lst1=list(w1)
+        lst2=list(w2)
+        count_add = 0
+        for i in range(min(len(lst1),len(lst2))-1):
+            if lst1[i] == lst2[i+1] and lst1[i] != lst2[i]:
+                lst1.insert(i,lst2[i])
+                count_add +=1# Fill in the condition
+        return lst1,lst2,count_add
+    def add1(w1,w2):
+        lst1=list(w1)
+        lst2=list(w2)
+        count_add = 0
+        i=0
+        while i < min(len(lst1),len(lst2)):
+            if lst1[i] != lst2[i] and lst1[i-1]==lst1[i-1]:
+                lst1.insert(i,lst2[i])
+                count_add +=1
+            i+=1
+        return lst1,lst2,count_add
+    def remove(w1,w2):
+        lst1=list(w1)
+        lst2=list(w2)
+        count_remove = 0
+        for i in range(1,min(len(lst1),len(lst2))):
+            if lst1[i] == lst2[i-1] and lst1[i] != lst2[i]:
+                lst1.pop(i-1)
+                count_remove +=1# Fill in the condition
+        return lst1,lst2,count_remove      
+    add_diff = add(start,goal)  # Fill in these lines
+    remove_diff = remove(start,goal) 
+    add1_diff = add1(start,goal) 
+    other_diff = sphinx_swap(start, goal, limit)
+    if add_diff[2] == 1 and add_diff[1]==add_diff[0]:
+        return add_diff[2]
+    elif remove_diff[2] == 1 and remove_diff[1]==remove_diff[0]:
+        return remove_diff[2]
+    elif add1_diff[0] == add1_diff[1]:
+        return add1_diff[2]
+    if add_diff[2] == 0 and remove_diff[2]==0:
+        return other_diff
     else:
-        add_diff = ...  # Fill in these lines
-        remove_diff = ... 
-        substitute_diff = ... 
+        #substitute_diff = ... 
         # BEGIN
         "*** YOUR CODE HERE ***"
-        # END
+        return add_diff[2]+remove_diff[2]+ abs(len(start)-len(goal))
 
 
 def final_diff(start, goal, limit):
@@ -213,6 +242,20 @@ def report_progress(typed, prompt, id, send):
     """Send a report of your id and progress so far to the multiplayer server."""
     # BEGIN PROBLEM 8
     "*** YOUR CODE HERE ***"
+    def report_print(typed,prompt):
+        i=0
+        count = 0
+        while i < min(len(typed),len(prompt)):
+            if typed[i]==prompt[i]:
+                count+=1
+            else:
+                i=100
+            i+=1
+        return count/len(prompt)
+    progress = report_print(typed,prompt)
+    report={'id':id,'progress':progress}
+    send(report)
+    return progress
     # END PROBLEM 8
 
 
@@ -239,8 +282,17 @@ def time_per_word(times_per_player, words):
     """
     # BEGIN PROBLEM 9
     "*** YOUR CODE HERE ***"
+    times =[]
+    def diff(lst):
+        result=[]
+        for i in range(1,len(lst)):
+            result.append(lst[i]-lst[i-1])
+        return result
+    for i in range(len(times_per_player)):
+        times.append(diff(times_per_player[i]))
+    return game(words,times)
     # END PROBLEM 9
-
+    
 
 def fastest_words(game):
     """Return a list of lists of which words each player typed fastest.
@@ -254,6 +306,27 @@ def fastest_words(game):
     words = range(len(all_words(game)))    # An index for each word
     # BEGIN PROBLEM 10
     "*** YOUR CODE HERE ***"
+    
+    '''Create a min list'''
+    my_lst_player = all_times(game)
+    min_lst =  []
+    result = [[] for _ in range(len(all_times(game)))]
+    for i in range(len(all_words(game))):
+        min_lst.append(min([player[i] for player in my_lst_player]))
+    for i in range(len(all_times(game))):
+        for j in range(len(all_words(game))):
+            if my_lst_player[i][j]==min_lst[j]:
+                result[i].append(all_words(game)[j])
+    distinct_words = []
+    distinct_words.extend(result[0])
+    distinct_words
+    for i in range(1,len(result)):
+        word =list(set(result[i]) & set(distinct_words))
+        for j in range(len(word)):
+            result[i].remove(word[j])
+        distinct_words.extend(result[i])
+    return result
+   
     # END PROBLEM 10
 
 
