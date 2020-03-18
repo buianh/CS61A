@@ -1,0 +1,28 @@
+{
+    "name": "Lab 8",
+    "endpoint": "cal/cs61a/sp20/lab08",
+    "src": [
+        "lab08.py",
+        "lab08_extra.py"
+    ],
+    "tests": {
+        "tests/wwpd-efficiency.py": "ok_test",
+        "lab08.py": "doctest",
+        "lab08_extra.py": "doctest"
+    },
+    "default_tests": [
+        "insert",
+        "wwpd-efficiency",
+        "subseqs",
+        "inc_subseqs",
+        "permutations"
+    ],
+    "protocols": [
+        "restore",
+        "file_contents",
+        "unlock",
+        "grading",
+        "analytics",
+        "backup"
+    ]
+}
