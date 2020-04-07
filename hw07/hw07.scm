@@ -61,7 +61,7 @@
   (cond
   ((= exponent 0) 1)
   ((= exponent 1) base)
-  ((number? base) (* base (make-exp base (- exponent 1)) ))
+  ((and (number? base) (number? exponent)) (expt base exponent))
   (else (list '^ base exponent))
   )
 )
