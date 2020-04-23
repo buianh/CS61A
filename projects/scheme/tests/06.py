@@ -5,7 +5,7 @@ test = {
     {
       'cases': [
         {
-          'answer': 'fd4dd892ccea3adcf9446dc4a9738d47',
+          'answer': 'Pair(A, nil), where: A is the quoted expression',
           'choices': [
             r"""
             Pair('quote', Pair(A, nil)), where:
@@ -25,7 +25,7 @@ test = {
             """
           ],
           'hidden': False,
-          'locked': True,
+          'locked': False,
           'question': 'What is the structure of the expressions argument to do_quote_form?'
         }
       ],
@@ -37,18 +37,15 @@ test = {
         {
           'code': r"""
           >>> do_quote_form(Pair(3, nil), global_frame)
-          3c7e8a3a2176a696c3a66418f78dff6b
-          # locked
+          3
           >>> do_quote_form(Pair('hi', nil), global_frame)
-          95448591e64e04a7a7885d5fb9b45583
-          # locked
+          'hi'
           >>> expr = Pair(Pair('+', Pair('x', Pair(2, nil))), nil)
           >>> do_quote_form(expr, global_frame)
-          2301ee746b57783004f00f39498fdaed
-          # locked
+          Pair('+', Pair('x', Pair(2, nil)))
           """,
           'hidden': False,
-          'locked': True
+          'locked': False
         }
       ],
       'scored': True,
@@ -64,18 +61,11 @@ test = {
         {
           'code': r"""
           scm> ''hello
-          f675ad62f5f67e5229145843fd6bbcaa
-          # locked
-          # choice: (quote hello)
-          # choice: hello
-          # choice: (hello)
-          # choice: (quote (quote (hello)))
+          (quote hello)
           scm> (quote (1 2))
-          484e4b42665b2864d685ef07fe666107
-          # locked
+          (1 2)
           scm> (car '(1 2 3))
-          eb892a26497f936d1f6cae54aacc5f51
-          # locked
+          1
           scm> (cdr '(1 2))
           750540b47bda75ff036b4a9aa741b087
           # locked

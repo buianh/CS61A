@@ -37,6 +37,11 @@ def scheme_eval(expr, env, _=None): # Optional third argument is ignored
     else:
         # BEGIN PROBLEM 4
         "*** YOUR CODE HERE ***"
+        operator = scheme_eval(first, env)
+        validate_procedure(operator)
+        operands =  rest.map(lambda x: scheme_eval(x,env))
+        return scheme_apply(operator,operands, env)
+        
         # END PROBLEM 4
 
 def self_evaluating(expr):
@@ -68,7 +73,14 @@ def eval_all(expressions, env):
     2
     """
     # BEGIN PROBLEM 7
-    return scheme_eval(expressions.first, env) # change this line
+    if expressions is nil:
+        return None
+    elif expressions.rest is nil:
+        return scheme_eval(expressions.first, env) # change this line
+    else:
+        scheme_eval(expressions.first, env)
+        return eval_all(expressions.rest, env)
+        
     # END PROBLEM 7
 
 ################
@@ -93,12 +105,21 @@ class Frame(object):
         """Define Scheme SYMBOL to have VALUE."""
         # BEGIN PROBLEM 2
         "*** YOUR CODE HERE ***"
+        self.bindings[symbol] = value
         # END PROBLEM 2
 
     def lookup(self, symbol):
         """Return the value bound to SYMBOL. Errors if SYMBOL is not found."""
         # BEGIN PROBLEM 2
         "*** YOUR CODE HERE ***"
+        if symbol in self.bindings.keys():
+            return self.bindings[symbol]
+        elif self.parent:
+            return self.parent.lookup(symbol)
+        else:
+            raise SchemeError
+            
+        
         # END PROBLEM 2
         raise SchemeError('unknown identifier: {0}'.format(symbol))
 
@@ -156,6 +177,20 @@ class BuiltinProcedure(Procedure):
         python_args = []
         # BEGIN PROBLEM 3
         "*** YOUR CODE HERE ***"
+        if args != nil:
+            python_args.append(args.first)
+            rest = args.rest
+            while rest != nil:
+                python_args.append(rest.first)
+                rest = rest.rest
+        if self.use_env:
+            python_args.append(env)
+        try:
+            return self.fn(*python_args)
+        except TypeError:
+            raise SchemeError
+        
+        
         # END PROBLEM 3
         try:
             return self.fn(*python_args)
@@ -238,6 +273,10 @@ def do_define_form(expressions, env):
         validate_form(expressions, 2, 2) # Checks that expressions is a list of length exactly 2
         # BEGIN PROBLEM 5
         "*** YOUR CODE HERE ***"
+        result =  scheme_eval(expressions.rest.first, env)
+        env.define(target, result)
+        return target
+        
         # END PROBLEM 5
     elif isinstance(target, Pair) and scheme_symbolp(target.first):
         # BEGIN PROBLEM 9
@@ -257,6 +296,7 @@ def do_quote_form(expressions, env):
     validate_form(expressions, 1, 1)
     # BEGIN PROBLEM 6
     "*** YOUR CODE HERE ***"
+    return expressions.first
     # END PROBLEM 6
 
 def do_begin_form(expressions, env):
@@ -283,6 +323,10 @@ def do_lambda_form(expressions, env):
     validate_formals(formals)
     # BEGIN PROBLEM 8
     "*** YOUR CODE HERE ***"
+    if expressions.rest:
+        return LambdaProcedure(formals, expressions.rest,env)
+    else:
+        return SchemeError
     # END PROBLEM 8
 
 def do_if_form(expressions, env):
